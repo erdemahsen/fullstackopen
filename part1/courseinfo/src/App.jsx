@@ -4,16 +4,16 @@ const Header = ({course}) => {
   )
 }
 
-const Content = ({content}) => {
-  const contentParagprahs = content.map((e,index) => <p key={index}>{e.part}{e.exercise}</p> )
+const Content = ({parts}) => {
+  const contentParagprahs = parts.map((e,index) => <p key={index}>{e.name}{e.exercise}</p> )
   return (
     <>{contentParagprahs}</>
   )
 }
 
-const Total = ({totalExercises}) => {
+const Total = ({parts}) => {
 
-  const sum = totalExercises.reduce((a, b) => a + b, 0);
+  const sum = parts.reduce((acc, part) => acc + part.exercise, 0); // last 0 is the starter of the acc
   //console.log(sum)
   return (
     <p>Number of exercises {sum}</p>
@@ -29,16 +29,16 @@ const App = () => {
   const part3 = 'State of a component'
   const exercises3 = 14
 
-  const content = [
-    {part: part1, exercise: exercises1},
-    {part: part2, exercise: exercises2},
-    {part: part3, exercise: exercises3}
+  const parts = [
+    {name: part1, exercise: exercises1},
+    {name: part2, exercise: exercises2},
+    {name: part3, exercise: exercises3}
   ]
   return (
     <div>
       <Header course = {course}/>
-      <Content content={content}/>
-      <Total totalExercises = {[exercises1, exercises2, exercises3]}/>
+      <Content parts={parts}/>
+      <Total parts = {parts}/>
     </div>
   )
 }
