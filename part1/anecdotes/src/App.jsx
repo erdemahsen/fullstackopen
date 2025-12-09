@@ -16,6 +16,9 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+  const maxVotes = Math.max(...votes)
+  const maxIndex = votes.indexOf(maxVotes)
+
   function nextAnectode () {
     const ind = Math.floor(Math.random() * anecdotes.length)
     //console.log(ind)
@@ -30,12 +33,15 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anectode of the Day</h1>
       {anecdotes[selected]} 
       <br/>
       has {votes[selected]} votes
       <br/>
       <button onClick={nextAnectode}>next anectode</button>
       <button onClick={voteAnectode}>vote</button>
+      <h1>Anectode with most votes</h1>
+      {anecdotes[maxIndex]} 
     </div>
   )
 }
