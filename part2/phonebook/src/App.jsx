@@ -13,12 +13,18 @@ const App = () => {
   const [newName, setNewName] = useState('')
 
   function handleNameChange(event) {
-    console.log("hi")
     setNewName(event.target.value)
   }
 
   function handleAddClick(event){
     event.preventDefault()
+    for(let i = 0; i < persons.length; i++)
+    {
+      if(persons[i].name === newName){
+        alert(`${newName} is already in the list`)
+        return 
+      }
+    }
     setPersons([...persons, {name: newName}])
     setNewName('')
   }
@@ -27,7 +33,6 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <form>
-
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
         </div>
