@@ -13,20 +13,22 @@ const Content = ({parts}) => {
 
 const Total = ({parts}) => {
 
-  const sum = parts.reduce((acc, part) => acc + part.exercise, 0); // last 0 is the starter of the acc
-  //console.log(sum)
+  const sum = parts.reduce((acc, part) => acc + part.exercises, 0); // last 0 is the starter of the acc
   return (
-    <p>Number of exercises {sum}</p>
+    <p>
+        <strong>
+            total of {sum} exercises
+        </strong>
+    </p>
   )
 }
 
 const Course = (props) => {
-    console.log(props.course.name)
   return (
     <>
         <Header course = {props.course}/>
         <Content parts = {props.course.parts}/>
-        
+        <Total parts = {props.course.parts}/>
     </>
   )
 }
