@@ -1,11 +1,11 @@
 const Header = ({course}) => {
   return (
-    <h1>{course.name}</h1>
+    <h2>{course.name}</h2>
   )
 }
 
 const Content = ({parts}) => {
-  const contentParagprahs = parts.map((e,index) => <p key={index}>{e.name}{e.exercise}</p> )
+  const contentParagprahs = parts.map((e,index) => <p key={index}>{e.name} {e.exercises}</p> )
   return (
     <>{contentParagprahs}</>
   )
