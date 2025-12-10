@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
+const api_key = import.meta.env.VITE_SOME_KEY
+
 const Country = ({name}) => {
   const [countryDetail, setCountryDetail] = useState(null)
+  const [weatherDetail, setWeatherDetail] = useState(null)
 
   useEffect(() => {
-    axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${name}`)
-      .then(response => {
-        //console.log(response.data)
-        const co = response.data
+    const fetchData = async () => {
+      try {
+        const countryRes = await axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${name}`) // await is important
+        const co = countryRes.data
+
+        const [lat, lng] = co.latlng
+        const weatherRes = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${api_key}&units=metric`)
+        const w = weatherRes.data
+
         setCountryDetail({
           name: co.name.common,
           capital: co.capital,
@@ -16,11 +24,22 @@ const Country = ({name}) => {
           languages: Object.values(co.languages),
           flags: co.flags
         })
+
+        setWeatherDetail({
+          temperature: w.main.temp,
+          //icon : w.weather[0].icon,
+          iconLink: `https://openweathermap.org/img/wn/${w.weather[0].icon}@2x.png`,
+          windSpeed : w.wind.speed,
+        })
       }
-    
-    )
+      catch(error) {
+        console.log("error fetching")
+      }
+    }
+
+    fetchData()
   }, [])
-  if(countryDetail === null){
+  if(countryDetail === null || weatherDetail === null){
     return <></>
   }
   
@@ -32,6 +51,10 @@ const Country = ({name}) => {
       <h2>Languages</h2>
       <ul>{countryDetail.languages.map((c, index) => <li key={index}>{c}</li>)}</ul>
       <img src={countryDetail.flags.png} alt={countryDetail.flags.alt}/>
+      <h2>Weather in {countryDetail.capital}</h2>
+      <p>Temperature {weatherDetail.temperature} Celsius</p>
+      <img src={weatherDetail.iconLink}/>
+      <p>Wind {weatherDetail.windSpeed} m/s</p>
     </>
   )
 }
@@ -59,7 +82,7 @@ const Countries = ({countries, curText}) => {
                 <button onClick={() => (toggleShowedCountries(c)) }>{showedCountries.includes(c) ? "hide" : "show"}</button>
               </li>
           )}
-          {showedCountries.map(c => <Country name = {c}/>)}
+          {showedCountries.map((c, index) => <Country key={index} name = {c}/>)}
         </ul>
       }
       {matchedCountries.length === 1 &&
@@ -73,6 +96,7 @@ const Countries = ({countries, curText}) => {
 const App = () => {
   const [countries, setCountries] = useState([])
   const [curText, setCurText] = useState('')
+  
 
   function handleTextChange(event) {
     setCurText(event.target.value)
