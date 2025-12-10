@@ -5,12 +5,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/person'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   function handleNameChange(event) {
     setNewName(event.target.value)
@@ -22,6 +24,11 @@ const App = () => {
 
   function handleFilterChange(event) {
     setNewFilter(event.target.value)
+  }
+
+  function handleNotification(message){
+    setNotificationMessage(message)
+    setTimeout(() => setNotificationMessage(null), 1000)  
   }
 
   function handleAddClick(event){
@@ -37,16 +44,19 @@ const App = () => {
             console.log(response.data)
             setPersons(persons.filter(p => p.id !== response.data.id).concat(response.data))
           })
+          setNewName('')
+          setNewNumber('')
+          handleNotification(`Updated ${newName}`)
         }
         
         return 
       }
     }
-    personService.create({name: newName, number: newNumber})
-
-    setPersons([...persons, {name: newName, number: newNumber}])
+    personService.create({name: newName, number: newNumber, id: newName})
+    setPersons([...persons, {name: newName, number: newNumber, id: newName}])
     setNewName('')
     setNewNumber('')
+    handleNotification(`Added ${newName}`)
   }
 
   function onDelete (id) {
@@ -65,6 +75,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notificationMessage = {notificationMessage}/>
       <Filter filter = {newFilter} handleFilterChange = {handleFilterChange}/>
       <h3>add a new</h3>
       <PersonForm 
