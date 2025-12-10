@@ -29,7 +29,16 @@ const App = () => {
     for(let i = 0; i < persons.length; i++)
     {
       if(persons[i].name === newName){
-        alert(`${newName} is already in the list`)
+        const newPerson = { ...persons[i], number: newNumber}
+        if(window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`))
+        {
+          personService.update(persons[i].id, newPerson)
+          .then(response => {
+            console.log(response.data)
+            setPersons(persons.filter(p => p.id !== response.data.id).concat(response.data))
+          })
+        }
+        
         return 
       }
     }
