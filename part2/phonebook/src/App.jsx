@@ -43,12 +43,16 @@ const App = () => {
           .then(response => {
             console.log(response.data)
             setPersons(persons.filter(p => p.id !== response.data.id).concat(response.data))
+            console.log("catch did not stop me")
+            handleNotification(`Updated ${newName}`)
+          })
+          .catch(error => {
+            handleNotification(`Information of ${newPerson.name} has already been removed from the server`)
+            setPersons(persons.filter(p => p.name !== newName))
           })
           setNewName('')
-          setNewNumber('')
-          handleNotification(`Updated ${newName}`)
+          setNewNumber('') 
         }
-        
         return 
       }
     }
@@ -89,8 +93,7 @@ const App = () => {
       <h2>Numbers</h2>
 
       <Persons persons = {persons} newFilter= {newFilter} onDelete={onDelete}/>
-      
-      <div>debug: {newName}</div>
+
     </div>
   )
 }
