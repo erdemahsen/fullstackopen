@@ -38,13 +38,28 @@ const Country = ({name}) => {
 
 const Countries = ({countries, curText}) => {
   const matchedCountries = countries.filter(c => c.toLowerCase().includes(curText.toLowerCase()))
+  const [showedCountries, setShowedCountries] = useState([])
+
+  function toggleShowedCountries(co) {
+    if(showedCountries.includes(co))
+      setShowedCountries(showedCountries.filter(c => c != co))
+    else {
+      setShowedCountries([...showedCountries, co])
+    }
+  }
   return (
     <>
       {matchedCountries.length > 10 && <p>Too many matches, specify another filter</p>}
       {matchedCountries.length < 10 && 
         matchedCountries.length > 1 &&  
         <ul>
-          {matchedCountries.map((c, index) => <li key={index}>{c}</li>)}
+          {matchedCountries.map((c, index) => 
+              <li key={index}>
+                {c} 
+                <button onClick={() => (toggleShowedCountries(c)) }>{showedCountries.includes(c) ? "hide" : "show"}</button>
+              </li>
+          )}
+          {showedCountries.map(c => <Country name = {c}/>)}
         </ul>
       }
       {matchedCountries.length === 1 &&
