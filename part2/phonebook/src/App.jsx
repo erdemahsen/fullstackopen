@@ -40,6 +40,14 @@ const App = () => {
     setNewNumber('')
   }
 
+  function onDelete (id) {
+    if(window.confirm(`Delete ${persons.filter(p => p.id ===id)[0].name} ?`))
+    {
+      personService.deletee(id).then(response => {setPersons(persons.filter(p => p.id!==response.data.id))})
+    }
+    
+  }
+
   useEffect(() => {
       personService.getAll()
         .then(response => setPersons(response.data))
@@ -60,7 +68,7 @@ const App = () => {
       
       <h2>Numbers</h2>
 
-      <Persons persons = {persons} newFilter= {newFilter}/>
+      <Persons persons = {persons} newFilter= {newFilter} onDelete={onDelete}/>
       
       <div>debug: {newName}</div>
     </div>

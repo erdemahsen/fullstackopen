@@ -1,6 +1,13 @@
-const Person = ({person}) => {
+import personService from '../services/person'
+
+const Person = ({person, onDelete}) => {
+
   return (
-    <p>{person.name} {person.number}</p>
+    <>
+        <p>{person.name} {person.number}</p>
+        <button onClick={() => onDelete(person.id)}>delete</button>
+    </>
+    
   )
 }
 
