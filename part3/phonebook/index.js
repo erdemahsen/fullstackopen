@@ -32,14 +32,23 @@ app.get('/api/persons', (request, response) => {
     response.json(personsData)
 })
 
-    app.get('/api/info', (request, response) => {
-        const now = new Date()
-        //const infoText = "<p>Phonebook has info for " + String(personsData.length) + " people" + "\n" + now
+app.get('/api/info', (request, response) => {
+    const now = new Date()
+    //const infoText = "<p>Phonebook has info for " + String(personsData.length) + " people" + "\n" + now
 
-        const infoText = `<p>Phonebook has info for ${String(personsData.length)} people <br/> ${now}</p>`
-        
-        response.send(infoText)
-    })
+    const infoText = `<p>Phonebook has info for ${String(personsData.length)} people <br/> ${now}</p>`
+    
+    response.send(infoText)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = personsData.find(p => p.id == id)
+    if(!person) {
+        return response.status(404).end("Person with that id DNE")
+    }
+    response.json(person)
+})
 
 
 console.log((Date.now()))
