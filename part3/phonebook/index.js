@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const personsData = [
+let personsData = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -51,6 +51,12 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 
-console.log((Date.now()))
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    personsData = personsData.filter(p => p.id != id)
+    response.status(204).end("Person successfully deleted")
+})
+
+
 const PORT = 3001;
 app.listen(PORT, () => console.log(`we are live on http://localhost:${PORT}`))
