@@ -62,8 +62,21 @@ app.post('/api/persons', (request, response) => {
     const body = request.body
     if(!body.name || !body.number)
     {
-        return response.status(404).end("Name or number is not provided")
+        return response.status(404).json(
+            {
+                "error": "name or number is missing"
+            }
+        )
     }
+    else if(personsData.filter(p => p.name === body.name).length > 0){
+        return response.status(404).json(
+            {
+                "error": "name must be unique"
+            }
+            
+        )
+    }
+
     const person = {
         id: String(Math.floor(Math.random()*1000)),
         name: body.name,
