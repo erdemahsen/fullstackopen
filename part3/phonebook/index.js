@@ -32,5 +32,16 @@ app.get('/api/persons', (request, response) => {
     response.json(personsData)
 })
 
+    app.get('/api/info', (request, response) => {
+        const now = new Date()
+        //const infoText = "<p>Phonebook has info for " + String(personsData.length) + " people" + "\n" + now
+
+        const infoText = `<p>Phonebook has info for ${String(personsData.length)} people <br/> ${now}</p>`
+        
+        response.send(infoText)
+    })
+
+
+console.log((Date.now()))
 const PORT = 3001;
 app.listen(PORT, () => console.log(`we are live on http://localhost:${PORT}`))
