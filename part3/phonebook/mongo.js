@@ -1,0 +1,41 @@
+const mongoose = require('mongoose')
+
+if (process.argv.length < 3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
+
+const password = process.argv[2] 
+const dbName = "phonebook"
+const url = `mongodb+srv://admin:${password}@fullstackopen.g2xo3cd.mongodb.net/${dbName}?appName=fullstackopen`
+mongoose.set('strictQuery',false)
+mongoose.connect(url, { family: 4 })
+
+const personSchema = new mongoose.Schema({
+    name: String,
+    number: String,
+})
+
+const Person = mongoose.model('Person', personSchema)
+
+if(process.argv.length === 3) {
+    Person
+        .find({})
+        .then(persons => {
+            console.log("phonebook: ")
+            persons.forEach(person => console.log(person.name, person.number))
+            mongoose.connection.close()
+        })
+}
+else if(process.argv.length > 3){
+    const person = new Person({
+        name: process.argv[3],
+        number: process.argv[4],
+    })
+
+    person.save().then(result => {
+        console.log(`added ${result.name} number ${result.number} to the phonebook`)
+        console.log(`id is ${result._id}`)
+        mongoose.connection.close()
+    })
+}
