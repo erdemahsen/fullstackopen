@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json())
+
 let personsData = [
     { 
       "id": "1",
@@ -28,10 +30,6 @@ app.get('/', (request, response) => {
     response.send('health check')
 })
 
-app.get('/api/persons', (request, response) => {
-    response.json(personsData)
-})
-
 app.get('/api/info', (request, response) => {
     const now = new Date()
     //const infoText = "<p>Phonebook has info for " + String(personsData.length) + " people" + "\n" + now
@@ -39,6 +37,10 @@ app.get('/api/info', (request, response) => {
     const infoText = `<p>Phonebook has info for ${String(personsData.length)} people <br/> ${now}</p>`
     
     response.send(infoText)
+})
+
+app.get('/api/persons', (request, response) => {
+    response.json(personsData)
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -50,13 +52,27 @@ app.get('/api/persons/:id', (request, response) => {
     response.json(person)
 })
 
-
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
     personsData = personsData.filter(p => p.id != id)
     response.status(204).end("Person successfully deleted")
 })
 
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    if(!body.name || !body.number)
+    {
+        return response.status(404).end("Name or number is not provided")
+    }
+    const person = {
+        id: String(Math.floor(Math.random()*1000)),
+        name: body.name,
+        number: body.number,
+    }
+    console.log(person, "Successfully created")
+    personsData = personsData.concat(person)
+    response.json(person)
+})
 
 const PORT = 3001;
 app.listen(PORT, () => console.log(`we are live on http://localhost:${PORT}`))
