@@ -11,6 +11,7 @@ morgan.token('dataJson', (request, response) => {
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :dataJson'))
 app.use(cors())
+app.use(express.static('dist'))
 
 let personsData = [
     { 
