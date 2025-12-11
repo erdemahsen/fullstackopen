@@ -56,7 +56,7 @@ const App = () => {
         return 
       }
     }
-    personService.create({name: newName, number: newNumber, id: newName})
+    personService.create({name: newName, number: newNumber})
     setPersons([...persons, {name: newName, number: newNumber, id: newName}])
     setNewName('')
     setNewNumber('')
@@ -66,7 +66,7 @@ const App = () => {
   function onDelete (id) {
     if(window.confirm(`Delete ${persons.filter(p => p.id ===id)[0].name} ?`))
     {
-      personService.deletee(id).then(response => {setPersons(persons.filter(p => p.id!==response.data.id))})
+      personService.deletee(id).then(response => {setPersons(persons.filter(p => p.id!==id))})
     }
     
   }
