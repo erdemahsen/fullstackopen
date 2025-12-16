@@ -5,3 +5,29 @@ Content-Type: application/json
     "content": "I am a note added by VS code Rest",
     "important": false
 }
+
+###
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+    "content": "I love MongoDB",
+    "important": false
+}
+
+###
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+    "content": "CSS is hard",
+    "important": false
+}
+###
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+    "content": "This is an important note",
+    "important": true
+}
