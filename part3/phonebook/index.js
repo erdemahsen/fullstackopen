@@ -52,6 +52,7 @@ app.get('/api/persons/:id', (request, response) => {
         .catch(e => {
             console.log(`There was en error while findin the person with id ${id}`)
         })
+    // it was already done earlier
 })
 
 app.delete('/api/persons/:id', (request, response) => {
