@@ -1,6 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors')
+const Person = require('./models/person');
+const person = require('./models/person');
+const dotenv = require('dotenv').config()
+
+//const Person = require('./models/person')
 
 const app = express();
 
@@ -10,8 +14,12 @@ morgan.token('dataJson', (request, response) => {
 
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :dataJson'))
-//app.use(cors())
 app.use(express.static('dist'))
+
+
+//const url = process.env.MONGODB_URI
+//console.log(url)
+
 
 let personsData = [
     { 
@@ -50,21 +58,37 @@ app.get('/api/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(personsData)
+    //response.json(personsData)
+    Person.find({}).then(persons=>{
+        response.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
-    const person = personsData.find(p => p.id == id)
-    if(!person) {
-        return response.status(404).end("Person with that id DNE")
-    }
-    response.json(person)
+    //const person = personsData.find(p => p.id == id)
+
+    Person.findById(id)
+        .then(person => {
+            if(!person) {
+                console.log("no catch but no person either")
+                return response.status(404).end("Person with that id DNE")
+            }
+            response.json(person)
+        })
+        .catch(e => {
+            console.log(`There was en error while findin the person with id ${id}`)
+        })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
-    personsData = personsData.filter(p => p.id != id)
+    //personsData = personsData.filter(p => p.id != id)
+    Person.deleteOne({
+        id: id
+    })
+    .then(lel => {console.log(lel)})
+    .catch(e => console.log(e))
     response.status(204).end("Person successfully deleted")
 })
 

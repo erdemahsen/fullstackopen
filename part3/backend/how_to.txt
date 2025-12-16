@@ -1,1 +1,0 @@
-MONGODB_URI="mongodb+srv://admin:admin@fullstackopen.g2xo3cd.mongodb.net/test?appName=fullstackopen" npm run dev
