@@ -1,2 +1,4 @@
 node mongo.js yourpassword Anna 040-1234556
 node mongo.js yourpassword
+
+npx eslint . --fix -> This fixes fixable linter

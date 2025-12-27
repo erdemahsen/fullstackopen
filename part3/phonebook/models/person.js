@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const dotenv = require('dotenv').config()
+require('dotenv').config()
 
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
 mongoose.connect(url, { family: 4 })
 
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch(error => {
@@ -15,21 +15,21 @@ mongoose.connect(url, { family: 4 })
 
 
 const personSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      minLength: 3,
-      required: true
-    },
-    number: {
-      type: String,
-      minLength: 8,
-      validate: {
-        validator: function(v) {
-          return /^\d{2,3}-\d+$/.test(v);
-        },
-        message: props => `${props.value} is not a valid phone number! eg. 09-1234556 and 040-22334455 are valid phone numbers`
+  name: {
+    type: String,
+    minLength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    validate: {
+      validator: function(v) {
+        return /^\d{2,3}-\d+$/.test(v)
       },
-    }
+      message: props => `${props.value} is not a valid phone number! eg. 09-1234556 and 040-22334455 are valid phone numbers`
+    },
+  }
 })
 
 personSchema.set('toJSON', {
