@@ -15,8 +15,27 @@ const favoriteBlog = (blogs) => {
     return blogs.reduce(findMax, blogs[0])
 }
 
+const _ = require('lodash');
+const mostBlog = (blogs) => {
+  if(blogs.length === 0) return null
+  let freq = _.countBy(blogs.map(b => b.author));
+  console.log("hello",freq)
+  const maxAuth = _.maxBy(Object.keys(freq), o => freq[o]);
+  return {
+    author: maxAuth,
+    blogs: freq[maxAuth]
+  }
+
+}
+
+const mostLikes = (blogs) => {
+
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlog,
+  mostLikes
 }
