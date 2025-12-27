@@ -9,7 +9,14 @@ const totalLikes = (blogs) => {
     return blogs.map(b => b.likes).reduce(sum, 0)
 }
 
+const favoriteBlog = (blogs) => {
+    if(blogs.length == 0) return null
+    findMax = (a, b) => (a.likes > b.likes ? a : b)
+    return blogs.reduce(findMax, blogs[0])
+}
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favoriteBlog
 }
