@@ -57,10 +57,16 @@ const App = () => {
       }
     }
     personService.create({name: newName, number: newNumber})
-    setPersons([...persons, {name: newName, number: newNumber, id: newName}])
-    setNewName('')
-    setNewNumber('')
-    handleNotification(`Added ${newName}`)
+      .then(createdPersonen => {
+        setPersons([...persons, {name: newName, number: newNumber, id: newName}])
+        setNewName('')
+        setNewNumber('')
+        handleNotification(`Added ${newName}`)
+      })
+      .catch(error => {
+        handleNotification(error.response.data.error)
+      })
+    
   }
 
   function onDelete (id) {

@@ -31,3 +31,12 @@ Content-Type: application/json
     "content": "This is an important note",
     "important": true
 }
+
+###
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+    "content": "SS",
+    "important": true
+}

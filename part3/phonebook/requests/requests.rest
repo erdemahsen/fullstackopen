@@ -22,3 +22,11 @@ GET http://localhost:3001/api/persons/693b53187f650ef09b0483ae
 GET http://localhost:3001/api/persons/1
 ###
 GET http://localhost:3001/api/persons/693b53187f650ef09b0483ab
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Jo",
+    "number": "512-123-11"
+}

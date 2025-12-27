@@ -16,7 +16,12 @@ mongoose.connect(url, { family: 4 })
   })
 
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: {
+    type: String,
+    minLength: 5, // built in validator
+    required: true, // built in validator
+    // we can define new validators as well.
+  },
   important: Boolean,
 })
 

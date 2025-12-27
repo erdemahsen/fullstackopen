@@ -79,7 +79,7 @@ function generateId() {
   return String(maxId+1)
 }
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
   if (!body.content){
@@ -98,9 +98,11 @@ app.post('/api/notes', (request, response) => {
     content: body.content,
     important: body.important || false,
   })
-  note.save().then(savedNote => {
-    response.json(savedNote) // response is only send when succeed
-  })
+  note.save()
+    .then(savedNote => {
+      response.json(savedNote) // response is only send when succeed
+    })
+    .catch(error => next(error)) // if someone breaks our validation then we catch that error
 })
 
 
@@ -116,7 +118,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  } else if(error.name === 'ValidationError') {
+    return response.status(400).send( { error: error.message})
+  }
 
   next(error)
 }
