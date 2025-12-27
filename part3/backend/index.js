@@ -122,7 +122,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send( { error: error.message})
   }
 
-  next(error)
+  next(error) // ex 3.21 is done :)
 }
 
 // this has to be the last loaded middleware, also all the routes should be registered before this!
