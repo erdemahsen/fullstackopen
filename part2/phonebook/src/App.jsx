@@ -28,7 +28,7 @@ const App = () => {
 
   function handleNotification(message){
     setNotificationMessage(message)
-    setTimeout(() => setNotificationMessage(null), 1000)  
+    setTimeout(() => setNotificationMessage(null), 2000)  
   }
 
   function handleAddClick(event){
