@@ -6,7 +6,7 @@ const User = require('../models/user')
 const strict = require('assert/strict')
 const { strictEqual, notEqual, equal, deepEqual } = require('assert')
 
-const helper = require('./test_user_helper')
+const helper = require('./test_helper')
 
 const { assert } = require('console')
 

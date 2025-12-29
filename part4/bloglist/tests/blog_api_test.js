@@ -3,21 +3,33 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
 const strict = require('assert/strict')
 const { strictEqual, notEqual, equal, deepEqual } = require('assert')
 
 const helper = require('./test_helper')
 const { assert } = require('console')
 
+
 const api = supertest(app)
 
+let userObj
 
 beforeEach(async () => {
+  await User.deleteMany({})
   await Blog.deleteMany({})
-  let blogObject = new Blog(helper.initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(helper.initialBlogs[1])
-  await blogObject.save()
+  
+  userObj = new User(helper.userToAdd)
+  await userObj.save()
+
+  for (const blogObj of helper.initialBlogs) {
+    let blog = new Blog({...blogObj, user: userObj._id})
+    await blog.save()
+    userObj.blogs.push(blog._id)
+  }
+  await userObj.save()
+
 })
 
 test('blogs are returned as json', async () => {
@@ -29,7 +41,7 @@ test('blogs are returned as json', async () => {
 
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
-  // console.log(response.body)
+  //console.log(response.body)
   strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
