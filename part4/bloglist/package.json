@@ -6,7 +6,8 @@
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development node --watch index.js",
     "test": "NODE_ENV=test node --test",
-    "testapi": "NODE_ENV=test node --test -- tests/blog_api_test.js"
+    "testblogapi": "NODE_ENV=test node --test -- tests/blog_api_test.js",
+    "testuserapi": "NODE_ENV=test node --test -- tests/users_api_test.js"
   },
   "author": "",
   "license": "ISC",

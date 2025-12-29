@@ -56,4 +56,14 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "er",
+    "name": "Erdem Ahsen",
+    "password": "paa"
+}
+
+###
 GET http://localhost:3001/api/users
