@@ -8,7 +8,8 @@ Content-Type: application/json
     "title": "Z Kuşağı Jargonu",
     "author": "Ali",
     "url": "https://www.alidindar.tr/z-kusagi-jargonu-2025/",
-    "likes": 3
+    "likes": 3,
+    "userId": "6952d0ab857f8efda6990818"
 }
 
 ###
