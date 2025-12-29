@@ -1,8 +1,9 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const {userExtractor} = require('../utils/middleware')
 
-const jwt = require('jsonwebtoken')
+
 
 
 blogsRouter.get('/', async (request, response, next) => {
@@ -20,26 +21,17 @@ blogsRouter.get('/', async (request, response, next) => {
   //})
 })
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', userExtractor, async (request, response, next) => {
   try {
     const body = request.body
-
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-    const user = await User.findById(decodedToken.id)
-
-    if (!user) {
-      return response.status(400).json({ error: 'userId missing or not valid' })
-    }
+    const user = request.user
 
     const blogObj = new Blog({
       title: body.title,
       author: body.author,
       url: body.url,
       likes: body.likes,
-      user: decodedToken.id
+      user: user._id
     })
 
     const blog = await blogObj.save()
@@ -53,17 +45,10 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 })
 
-blogsRouter.delete('/:id', async(request, response, next) => {
+blogsRouter.delete('/:id', userExtractor, async(request, response, next) => {
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
-    const user = await User.findById(decodedToken.id)
+    const user = request.user
 
-    if (!user) {
-      return response.status(400).json({ error: 'userId missing or not valid' })
-    }
     const blog = await Blog.findById(request.params.id)
 
     if(!blog) {
@@ -71,8 +56,6 @@ blogsRouter.delete('/:id', async(request, response, next) => {
     }
 
     // to string is necessary because id is an object **
-    console.log(blog)
-    console.log(user)
     if(blog.user.toString() === user.id) // do not compare blog and user's ids lol - 
     {
       await Blog.findByIdAndDelete(request.params.id)

@@ -3,7 +3,7 @@ GET http://localhost:3001/api/blogs/
 ###
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVrYSIsImlkIjoiNjk1MmQwYWI4NTdmOGVmZGE2OTkwODE4IiwiaWF0IjoxNzY3MDQyOTA0fQ.0TCFZh__Im-FOXh6hg075tJEjGzX5SNe2Wqq4r38_yw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVrYSIsImlkIjoiNjk1MmQwYWI4NTdmOGVmZGE2OTkwODE4IiwiaWF0IjoxNzY3MDQ1Mjg0LCJleHAiOjE3NjcwNDg4ODR9.SedI0B-rylxd3C6n9K3YERzcWUjOBMJ0Ne58cAFhQM8
 
 {
     "title": "Z Kuşağı Jargonu",
@@ -13,7 +13,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sd
 }
 
 ###
-DELETE http://localhost:3001/api/blogs/6952e454286accb165a73529
+DELETE http://localhost:3001/api/blogs/6952fe007f695d7c88c9fc69
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVrYSIsImlkIjoiNjk1MmQwYWI4NTdmOGVmZGE2OTkwODE4IiwiaWF0IjoxNzY3MDQ1Mjg0LCJleHAiOjE3NjcwNDg4ODR9.SedI0B-rylxd3C6n9K3YERzcWUjOBMJ0Ne58cAFhQM8
 
 
