@@ -24,3 +24,15 @@ Content-Type: application/json
 DELETE http://localhost:3001/api/blogs/69528d3631697c271e823ca6
 
 
+###
+PUT http://localhost:3001/api/blogs/694fef11c77c7f1eed5a9369
+Content-Type: application/json
+
+{
+    "title": "Lets update",
+    "author": "new authoer",
+    "url": "https://www.alidindar.tr/z-kusagi-jargonu-2025/",
+    "likes": 5
+}
+
+
