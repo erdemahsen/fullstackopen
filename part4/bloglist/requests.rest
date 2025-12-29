@@ -3,22 +3,13 @@ GET http://localhost:3001/api/blogs/
 ###
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVrYSIsImlkIjoiNjk1MmQwYWI4NTdmOGVmZGE2OTkwODE4IiwiaWF0IjoxNzY3MDQyOTA0fQ.0TCFZh__Im-FOXh6hg075tJEjGzX5SNe2Wqq4r38_yw
 
 {
     "title": "Z Kuşağı Jargonu",
     "author": "Ali",
     "url": "https://www.alidindar.tr/z-kusagi-jargonu-2025/",
-    "likes": 3,
-    "userId": "6952d0ab857f8efda6990818"
-}
-
-###
-POST http://localhost:3001/api/blogs/
-Content-Type: application/json
-
-{
-    "title": "Z Kuşağı Jargonu",
-    "url": "hello"
+    "likes": 3
 }
 
 ###
