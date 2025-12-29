@@ -87,7 +87,7 @@ test('if likes property is missing it should be default to 0', async () => {
 })
 
 test('if title and url missing post should not be added', async () => {
-  const failedPost = await api
+    const failedPost = await api
       .post('/api/blogs')
       .send(helper.blogToFail)
       .expect(400)
@@ -95,12 +95,30 @@ test('if title and url missing post should not be added', async () => {
 
     const response = await api.get('/api/blogs')
 
-    console.log(response.body)
+    //console.log(response.body)
     //const { id, ...blogWithoutId } = response.body[response.body.length-1]
 
     strictEqual(response.body.length, helper.initialBlogs.length)
     //deepEqual(blogWithoutId, {likes: 0, ...helper.blogToAddNoLikes})
     
+})
+
+test('delete a blogPost', async () => {
+    const beforeDelete = await api.get('/api/blogs')
+    const blogToDelete = beforeDelete.body[0]
+    //console.log(blogToDelete)
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+    const blogsAfterDelete = await api.get('/api/blogs')
+    strictEqual(blogsAfterDelete.body.length, helper.initialBlogs.length - 1)
+
+    for (const blog of blogsAfterDelete.body){
+      //console.log("comparing this to ",blog)
+      //console.log("this", blogToDelete)
+      notEqual(blog.id, blogToDelete.id)
+    }
 })
 
 after(async () => {
