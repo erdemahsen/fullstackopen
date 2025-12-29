@@ -15,6 +15,13 @@ const initialBlogs = [
   }
 ]
 
+const blogToAdd = {
+    title: "What is AI",
+    author: "Erdem",
+    url: "https://www.erdemahsen.com/what-is-ai",
+    likes: 13
+}
+
 const nonExistingId = async () => {
   const blog = new Blog(
     {
@@ -35,5 +42,5 @@ const blogsInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs,
+  initialBlogs, blogToAdd
 }

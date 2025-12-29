@@ -4,7 +4,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const strict = require('assert/strict')
-const { strictEqual, notEqual } = require('assert')
+const { strictEqual, notEqual, equal, deepEqual } = require('assert')
 
 const helper = require('./test_helper')
 const { assert } = require('console')
@@ -41,7 +41,30 @@ test('unique identifier property of the blog posts is named id, and not _id', as
         //console.log(response.body[i]._id)
         notEqual(blog.id, undefined)
         strictEqual(blog._id, undefined)
+        // undefined means not initialized while null means initialized to null
     }
+})
+
+test('a blog post can be added correctly', async () => {
+    const addedPost = await api
+      .post('/api/blogs')
+      .send(helper.blogToAdd)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    strictEqual(addedPost.body.title, helper.blogToAdd.title)
+    strictEqual(addedPost.body.author, helper.blogToAdd.author)
+    strictEqual(addedPost.body.url, helper.blogToAdd.url)
+    strictEqual(addedPost.body.likes, helper.blogToAdd.likes)
+
+    const response = await api.get('/api/blogs')
+
+    const { id, ...blogWithoutId } = response.body[response.body.length-1]
+    
+    strictEqual(response.body.length, helper.initialBlogs.length + 1)
+    deepEqual(blogWithoutId, helper.blogToAdd)
+
+    
 })
 
 after(async () => {
