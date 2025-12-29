@@ -17,6 +17,10 @@ Content-Type: application/json
 
 {
     "title": "Z Kuşağı Jargonu",
-
+    "url": "hello"
 }
+
+###
+DELETE http://localhost:3001/api/blogs/69528d3631697c271e823ca6
+
 
