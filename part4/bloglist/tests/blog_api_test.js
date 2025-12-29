@@ -60,10 +60,29 @@ test('a blog post can be added correctly', async () => {
     const response = await api.get('/api/blogs')
 
     const { id, ...blogWithoutId } = response.body[response.body.length-1]
-    
+
     strictEqual(response.body.length, helper.initialBlogs.length + 1)
     deepEqual(blogWithoutId, helper.blogToAdd)
+})
 
+test('if likes property is missing it should be default to 0', async () => {
+  const addedPost = await api
+      .post('/api/blogs')
+      .send(helper.blogToAddNoLikes)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    strictEqual(addedPost.body.title, helper.blogToAddNoLikes.title)
+    strictEqual(addedPost.body.author, helper.blogToAddNoLikes.author)
+    strictEqual(addedPost.body.url, helper.blogToAddNoLikes.url)
+    strictEqual(addedPost.body.likes, 0)
+
+    const response = await api.get('/api/blogs')
+
+    const { id, ...blogWithoutId } = response.body[response.body.length-1]
+
+    strictEqual(response.body.length, helper.initialBlogs.length + 1)
+    deepEqual(blogWithoutId, {likes: 0, ...helper.blogToAddNoLikes})
     
 })
 

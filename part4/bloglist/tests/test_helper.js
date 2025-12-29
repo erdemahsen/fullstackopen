@@ -22,6 +22,12 @@ const blogToAdd = {
     likes: 13
 }
 
+const blogToAddNoLikes = {
+    title: "this post have no likes provided",
+    author: "Erdem :(",
+    url: "https://www.erdemahsen.com/no-liker",
+}
+
 const nonExistingId = async () => {
   const blog = new Blog(
     {
@@ -42,5 +48,5 @@ const blogsInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs, blogToAdd
+  initialBlogs, blogToAdd, blogToAddNoLikes
 }
