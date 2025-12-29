@@ -10,17 +10,26 @@ const { strictEqual, notEqual, equal, deepEqual } = require('assert')
 
 const helper = require('./test_helper')
 const { assert } = require('console')
+const bcrypt = require('bcrypt')
 
 
 const api = supertest(app)
 
 let userObj
+let jwtToken
 
 beforeEach(async () => {
   await User.deleteMany({})
   await Blog.deleteMany({})
   
-  userObj = new User(helper.userToAdd)
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(helper.userToAdd.password, saltRounds)
+
+  userObj = new User({
+    username: helper.userToAdd.username,
+    name : helper.userToAdd.name,
+    passwordHash: passwordHash
+  })
   await userObj.save()
 
   for (const blogObj of helper.initialBlogs) {
@@ -29,6 +38,17 @@ beforeEach(async () => {
     userObj.blogs.push(blog._id)
   }
   await userObj.save()
+
+  const loginStuff = {
+    username: helper.userToAdd.username,
+    password: helper.userToAdd.password
+  }
+  const loginResponse = await api
+    .post('/api/login')
+    .send(loginStuff)
+
+  //console.log(loginResponse.body)
+  jwtToken = loginResponse.body.token
 
 })
 
@@ -61,6 +81,7 @@ test('a blog post can be added correctly', async () => {
     const addedPost = await api
       .post('/api/blogs')
       .send(helper.blogToAdd)
+      .auth(jwtToken, { type: 'bearer' }) // <--- Use this instead of .set
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -71,7 +92,7 @@ test('a blog post can be added correctly', async () => {
 
     const response = await api.get('/api/blogs')
 
-    const { id, ...blogWithoutId } = response.body[response.body.length-1]
+    const { id, user, ...blogWithoutId } = response.body[response.body.length-1] // also without user
 
     strictEqual(response.body.length, helper.initialBlogs.length + 1)
     deepEqual(blogWithoutId, helper.blogToAdd)
@@ -81,6 +102,7 @@ test('if likes property is missing it should be default to 0', async () => {
   const addedPost = await api
       .post('/api/blogs')
       .send(helper.blogToAddNoLikes)
+      .auth(jwtToken, { type: 'bearer' }) // <--- Use this instead of .set
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -91,7 +113,7 @@ test('if likes property is missing it should be default to 0', async () => {
 
     const response = await api.get('/api/blogs')
 
-    const { id, ...blogWithoutId } = response.body[response.body.length-1]
+    const { id, user, ...blogWithoutId } = response.body[response.body.length-1]
 
     strictEqual(response.body.length, helper.initialBlogs.length + 1)
     deepEqual(blogWithoutId, {likes: 0, ...helper.blogToAddNoLikes})
@@ -102,6 +124,7 @@ test('if title and url missing post should not be added', async () => {
     const failedPost = await api
       .post('/api/blogs')
       .send(helper.blogToFail)
+      .auth(jwtToken, { type: 'bearer' }) // <--- Use this instead of .set
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
@@ -122,6 +145,7 @@ test('delete a blogPost', async () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .auth(jwtToken, { type: 'bearer' }) // <--- Use this instead of .set
       .expect(204)
     const blogsAfterDelete = await api.get('/api/blogs')
     strictEqual(blogsAfterDelete.body.length, helper.initialBlogs.length - 1)
@@ -133,6 +157,24 @@ test('delete a blogPost', async () => {
     }
 })
 
+test('try deleting a blogPost without jwt', async () => {
+    const beforeDelete = await api.get('/api/blogs')
+    const blogToDelete = beforeDelete.body[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(401)
+})
+
+test('try adding a post without jwy token', async () => {
+  const addedPost = await api
+  .post('/api/blogs')
+  .send(helper.blogToAdd)
+  .expect(401)
+  .expect('Content-Type', /application\/json/)
+})
+
+// no auth here
 test('update a blogpost, like should be 1 more', async () => {
     const beforeUpdate = await api.get('/api/blogs')
     const blogToUpdate = beforeUpdate.body[0]
