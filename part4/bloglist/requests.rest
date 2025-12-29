@@ -35,4 +35,25 @@ Content-Type: application/json
     "likes": 5
 }
 
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
 
+{
+    "username": "mluuka",
+    "name": "Matti Luuka",
+    "password": "pass123"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "erdem",
+    "name": "Erdem Ahsen",
+    "password": "pass234"
+}
+
+###
+GET http://localhost:3001/api/users
