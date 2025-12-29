@@ -29,18 +29,18 @@ test('blogs are returned as json', async () => {
 
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
-  console.log(response.body)
+  // console.log(response.body)
   strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
 test('unique identifier property of the blog posts is named id, and not _id', async () => {
     const response = await api.get('/api/blogs')
-    for(let i = 0; i < response.body.length; i++)
+    for(const blog of response.body)
     {
         //console.log(response.body[i].id)
         //console.log(response.body[i]._id)
-        notEqual(response.body[i].id, undefined)
-        strictEqual(response.body[i]._id, undefined)
+        notEqual(blog.id, undefined)
+        strictEqual(blog._id, undefined)
     }
 })
 
