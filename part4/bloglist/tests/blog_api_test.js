@@ -86,6 +86,23 @@ test('if likes property is missing it should be default to 0', async () => {
     
 })
 
+test('if title and url missing post should not be added', async () => {
+  const failedPost = await api
+      .post('/api/blogs')
+      .send(helper.blogToFail)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    console.log(response.body)
+    //const { id, ...blogWithoutId } = response.body[response.body.length-1]
+
+    strictEqual(response.body.length, helper.initialBlogs.length)
+    //deepEqual(blogWithoutId, {likes: 0, ...helper.blogToAddNoLikes})
+    
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
