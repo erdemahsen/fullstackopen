@@ -43,18 +43,26 @@ blogsRouter.delete('/:id', async(request, response, next) => {
 blogsRouter.put('/:id', async(request, response, next) => {
   try {
     const blogToUpdate = await Blog.findById(request.params.id)
-    const updatedContent = request.body
+    const body = request.body
 
-    //console.log(blogToUpdate)
-    //console.log(updatedContent)
-    blogToUpdate.title = updatedContent.title
-    blogToUpdate.author = updatedContent.author
-    blogToUpdate.url = updatedContent.url
-    blogToUpdate.likes = updatedContent.likes
+    const blog = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+    }
 
-    const updateResponse = await blogToUpdate.save()
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      request.params.id, 
+      blog, 
+      { new: true, runValidators: true, context: 'query' }
+    )
 
-    response.json(updateResponse)
+    if (updatedBlog) {
+      response.json(updatedBlog)
+    } else {
+      response.status(404).end()
+    }
   }
   catch(error) {
     next(error)
