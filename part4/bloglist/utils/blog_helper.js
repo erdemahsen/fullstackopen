@@ -25,7 +25,6 @@ const mostBlog = (blogs) => {
     author: maxAuth,
     blogs: freq[maxAuth]
   }
-
 }
 
 const mostLikes = (blogs) => {
