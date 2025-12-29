@@ -121,6 +121,28 @@ test('delete a blogPost', async () => {
     }
 })
 
+test('update a blogpost, like should be 1 more', async () => {
+    const beforeUpdate = await api.get('/api/blogs')
+    const blogToUpdate = beforeUpdate.body[0]
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({...blogToUpdate, likes: blogToUpdate.likes+1})
+      .expect(200)
+
+    const blogsAfterUpdate = await api.get('/api/blogs')
+    strictEqual(blogsAfterUpdate.body.length, helper.initialBlogs.length)
+
+    for (const blog of blogsAfterUpdate.body){
+      if(blogToUpdate.id === blog.id){
+        deepEqual(blogToUpdate, {...blog, likes: blog.likes-1})
+      }
+    }
+    // really important note here : 
+    // {...blog, likes: blog.likes-1} and {likes: blog.likes-1, ...blog} are not the same
+    // ordering matters 
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
