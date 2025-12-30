@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import CreateBlog from './components/CreateBlog'
 
 
 const App = () => {
@@ -12,13 +13,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null) 
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   const [notificationMessage, setNotificationMessage] = useState(null)
-
-
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -62,15 +57,9 @@ const App = () => {
     }
   }
 
-  const handleAddBlog = async (event) => {
-    event.preventDefault() // not necessary I feel like
+  const addBlog = async ({title, author, url}) => {
     try {
-      console.log("hi, adding", title, author, url)
       const blog = await blogService.create({ title, author, url}); 
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-
       setNotificationMessage({message: `New blog ${blog.title} by ${blog.author} is added`, isError: false})
       setTimeout(() => {
         setNotificationMessage(null)
@@ -126,45 +115,6 @@ const App = () => {
     </>
   )
 
-  const addBlog = () => (
-    <>
-      <h2>create new</h2>
-      <form onSubmit={handleAddBlog}>
-        <div>
-          <label>
-            title
-            <input
-              type="text"
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            author
-            <input
-              type="text"
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            url
-            <input
-              type="text"
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">addBlog</button>
-      </form>      
-    </>
-  )
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -186,7 +136,11 @@ const App = () => {
       {notificationMessage && <Notification notificationMessage={notificationMessage}/>}
       {!user && loginForm()}
       {user && blogsListed()}
-      {user && <Togglable buttonLabel="Create new blog "> {addBlog()} </Togglable>}
+      {user && 
+        <Togglable buttonLabel="Create new blog "> 
+          <CreateBlog handleAddBlog={addBlog}/>
+        </Togglable>
+      }
       
       
     </div>
