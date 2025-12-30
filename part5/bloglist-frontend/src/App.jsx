@@ -9,9 +9,9 @@ import CreateBlog from './components/CreateBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null) 
+  const [user, setUser] = useState(null)
 
   const [notificationMessage, setNotificationMessage] = useState(null)
 
@@ -25,13 +25,13 @@ const App = () => {
       setUsername('')
       setPassword('')
 
-      setNotificationMessage({message: `${user.name} logged in succesfully`, isError: false})
+      setNotificationMessage({ message: `${user.name} logged in succesfully`, isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
       window.localStorage.setItem('userJson', JSON.stringify(user))
     } catch {
-      setNotificationMessage({message: 'wrong username or password', isError: true})
+      setNotificationMessage({ message: 'wrong username or password', isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -45,27 +45,46 @@ const App = () => {
       window.localStorage.removeItem('userJson')
       //setUsername('')
       //setPassword('')
-      setNotificationMessage({message: "Logged out successfuly", isError: false})
+      setNotificationMessage({ message: "Logged out successfuly", isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
     } catch {
-      setNotificationMessage({message: "Could not log out", isError: true})
+      setNotificationMessage({ message: "Could not log out", isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
     }
   }
 
-  const addBlog = async ({title, author, url}) => {
+  const addBlog = async ({ title, author, url }) => {
     try {
-      const blog = await blogService.create({ title, author, url}); 
-      setNotificationMessage({message: `New blog ${blog.title} by ${blog.author} is added`, isError: false})
+      const blog = await blogService.create({ title, author, url });
+      setNotificationMessage({ message: `New blog ${blog.title} by ${blog.author} is added`, isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
+      await initializeBlogs()
     } catch {
-      setNotificationMessage({message: "could not create the blog", isError: true})
+      setNotificationMessage({ message: "could not create the blog", isError: true })
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    }
+  }
+
+  const updateBlog = async (blogC) => {
+    console.log("updateBlog", blogC)
+    try {
+      const blog = await blogService.update(blogC);
+      setNotificationMessage({ message: `blog is updated`, isError: false })
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+      await initializeBlogs()
+    } catch (error) {
+      console.log("error", error)
+      setNotificationMessage({ message: "could not update the blog", isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -97,22 +116,25 @@ const App = () => {
           </label>
         </div>
         <button type="submit">login</button>
-      </form>      
+      </form>
     </>
   )
 
   const blogsListed = () => (
     <>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleUpdateBlog={updateBlog} />
       )}
     </>
   )
 
+  const initializeBlogs = async () => {
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
+  }
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    initializeBlogs()
   }, [])
 
   useEffect(() => {
@@ -127,25 +149,25 @@ const App = () => {
 
   return (
     <div>
-      {notificationMessage && <Notification notificationMessage={notificationMessage}/>}
+      {notificationMessage && <Notification notificationMessage={notificationMessage} />}
       {!user && loginForm()}
-      {user && 
-      <>
-        <h2>blogs</h2>
-        <div>
-          {user.name} is logged in
-          <button onClick={handleLogout}>logout</button>
-        </div>
-        <br></br>
-      </>}
+      {user &&
+        <>
+          <h2>blogs</h2>
+          <div>
+            {user.name} is logged in
+            <button onClick={handleLogout}>logout</button>
+          </div>
+          <br></br>
+        </>}
       {user && blogsListed()}
-      {user && 
-        <Togglable buttonLabel="Create new blog "> 
-          <CreateBlog handleAddBlog={addBlog}/>
+      {user &&
+        <Togglable buttonLabel="Create new blog ">
+          <CreateBlog handleAddBlog={addBlog} />
         </Togglable>
       }
-      
-      
+
+
     </div>
   )
 }

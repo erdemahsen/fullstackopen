@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleUpdateBlog}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -15,7 +15,16 @@ const Blog = ({ blog }) => {
   }
   const likeBlog = () => {
     console.log("I am clicked")
+    console.log("like blog", blog)
+    const likedPost = {
+      ...blog,
+      likes: blog.likes +1,
+      user: blog.user.id
+    }
+    handleUpdateBlog(likedPost)
   }
+
+  //console.log(blog)
 
   return (
     <div style={blogStyle}>
