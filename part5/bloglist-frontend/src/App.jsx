@@ -103,12 +103,6 @@ const App = () => {
 
   const blogsListed = () => (
     <>
-      <h2>blogs</h2>
-      <div>
-        {user.name} is logged in
-        <button onClick={handleLogout}>logout</button>
-      </div>
-      <br></br>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -135,6 +129,15 @@ const App = () => {
     <div>
       {notificationMessage && <Notification notificationMessage={notificationMessage}/>}
       {!user && loginForm()}
+      {user && 
+      <>
+        <h2>blogs</h2>
+        <div>
+          {user.name} is logged in
+          <button onClick={handleLogout}>logout</button>
+        </div>
+        <br></br>
+      </>}
       {user && blogsListed()}
       {user && 
         <Togglable buttonLabel="Create new blog "> 
