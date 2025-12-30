@@ -9,11 +9,16 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null) 
 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({ username, password })
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -28,12 +33,26 @@ const App = () => {
   const handleLogout = (event) => {
     event.preventDefault() // not necessary I feel like
     try {
+      blogService.setToken(null)
       setUser(null)
       window.localStorage.removeItem('userJson')
       //setUsername('')
       //setPassword('')
     } catch {
       setErrorMessage('could not logout')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleAddBlog = (event) => {
+    event.preventDefault() // not necessary I feel like
+    try {
+      console.log("hi, adding", title, author, url)
+      const blog = blogService.create({ title, author, url}); 
+    } catch {
+      setErrorMessage('could not add a blog')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -83,6 +102,45 @@ const App = () => {
     </>
   )
 
+  const addBlog = () => (
+    <>
+      <h2>create new</h2>
+      <form onSubmit={handleAddBlog}>
+        <div>
+          <label>
+            title
+            <input
+              type="text"
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            author
+            <input
+              type="text"
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            url
+            <input
+              type="text"
+              value={url}
+              onChange={({ target }) => setUrl(target.value)}
+            />
+          </label>
+        </div>
+        <button type="submit">addBlog</button>
+      </form>      
+    </>
+  )
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -94,6 +152,7 @@ const App = () => {
     if (userJson) {
       const userJ = JSON.parse(userJson)
       setUser(userJ)
+      blogService.setToken(userJ.token)
       //blogService.setToken(user.token)
     }
   }, [])
@@ -102,6 +161,7 @@ const App = () => {
     <div>
       {!user && loginForm()}
       {user && blogsListed()}
+      {user && addBlog()}
     </div>
   )
 }
