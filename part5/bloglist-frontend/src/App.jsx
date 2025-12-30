@@ -74,7 +74,6 @@ const App = () => {
   }
 
   const updateBlog = async (blogC) => {
-    console.log("updateBlog", blogC)
     try {
       const blog = await blogService.update(blogC);
       setNotificationMessage({ message: `blog is updated`, isError: false })
@@ -85,6 +84,23 @@ const App = () => {
     } catch (error) {
       console.log("error", error)
       setNotificationMessage({ message: "could not update the blog", isError: true })
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    }
+  }
+
+  const deleteBlog = async (blogid) => {
+    try {
+      await blogService.deletee(blogid);
+      setNotificationMessage({ message: `blog is deleted`, isError: false })
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+      await initializeBlogs()
+    } catch (error) {
+      console.log("error", error)
+      setNotificationMessage({ message: "could not delete the blog", isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -120,33 +136,30 @@ const App = () => {
     </>
   )
 
-  const blogsListed = () => (
-    <>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleUpdateBlog={updateBlog} />
-      )}
-    </>
-  )
 
   const initializeBlogs = async () => {
     const blogs = await blogService.getAll()
     
-    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+    setBlogs(blogs.sort((a, b) => b.likes - a.likes)) // easy sorting method
   }
-
-  useEffect(() => {
-    initializeBlogs()
-  }, [])
-
   useEffect(() => {
     const userJson = window.localStorage.getItem('userJson')
     if (userJson) {
       const userJ = JSON.parse(userJson)
       setUser(userJ)
       blogService.setToken(userJ.token)
-      //blogService.setToken(user.token)
+      //blogService.set
+      // Token(user.token)
     }
+    initializeBlogs()
+    console.log(user)
   }, [])
+
+  useEffect(() => {
+    
+  }, [])
+
+  
 
   return (
     <div>
@@ -161,7 +174,9 @@ const App = () => {
           </div>
           <br></br>
         </>}
-      {user && blogsListed()}
+      {user && blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} handleUpdateBlog={updateBlog} handleDeleteBlog={deleteBlog} currentUser={user}/>
+      )}
       {user &&
         <Togglable buttonLabel="Create new blog ">
           <CreateBlog handleAddBlog={addBlog} />

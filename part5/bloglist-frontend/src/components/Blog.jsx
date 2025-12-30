@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog, handleUpdateBlog}) => {
+const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUser}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -14,8 +14,6 @@ const Blog = ({ blog, handleUpdateBlog}) => {
     setView(prev => !prev)
   }
   const likeBlog = () => {
-    console.log("I am clicked")
-    console.log("like blog", blog)
     const likedPost = {
       ...blog,
       likes: blog.likes +1,
@@ -23,8 +21,13 @@ const Blog = ({ blog, handleUpdateBlog}) => {
     }
     handleUpdateBlog(likedPost)
   }
-
-  //console.log(blog)
+  
+  const deleteBlog = () => {
+    if(window.confirm(`You are deleting ${blog.title} post. Are you sure ? `)){
+      handleDeleteBlog(blog.id)
+    }
+    // no need to put token or user info here, blogs.js handles the token stuff.
+  }
 
   return (
     <div style={blogStyle}>
@@ -41,6 +44,7 @@ const Blog = ({ blog, handleUpdateBlog}) => {
             <button onClick={likeBlog}>Like</button>
           </div>
           <div>{blog.user && blog.user.name}</div>
+          {currentUser.username === blog.user.username && <button onClick={deleteBlog}>remove</button>}
         </>
       }
        

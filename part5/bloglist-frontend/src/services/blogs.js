@@ -28,12 +28,22 @@ const update = async updatedBlog => {
 
   const {id, ...payload} = updatedBlog
 
-  console.log("id",id)
-  console.log("payload", payload)
+  //console.log("id",id)
+  //console.log("payload", payload)
 
   const updateUrl = baseUrl + "/" + id
   const response = await axios.put(updateUrl, payload, config)
   return response.data
 }
 
-export default { getAll, create, update, setToken}
+const deletee = async deletedBlogId => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const deleteUrl = baseUrl + "/" + deletedBlogId
+  const response = await axios.delete(deleteUrl, config)
+  return response.data
+}
+
+export default { getAll, create, update, deletee, setToken}
