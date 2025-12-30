@@ -17,13 +17,27 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      window.localStorage.setItem('userJson', JSON.stringify(user))
     } catch {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
-
+  }
+  const handleLogout = (event) => {
+    event.preventDefault() // not necessary I feel like
+    try {
+      setUser(null)
+      window.localStorage.removeItem('userJson')
+      //setUsername('')
+      //setPassword('')
+    } catch {
+      setErrorMessage('could not logout')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const loginForm = () => (
@@ -58,7 +72,10 @@ const App = () => {
   const blogsListed = () => (
     <>
       <h2>blogs</h2>
-      <div>{user.name} is logged in</div>
+      <div>
+        {user.name} is logged in
+        <button onClick={handleLogout}>logout</button>
+      </div>
       <br></br>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
@@ -72,13 +89,19 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const userJson = window.localStorage.getItem('userJson')
+    if (userJson) {
+      const userJ = JSON.parse(userJson)
+      setUser(userJ)
+      //blogService.setToken(user.token)
+    }
+  }, [])
+
   return (
     <div>
       {!user && loginForm()}
       {user && blogsListed()}
-      
-
-      
     </div>
   )
 }
