@@ -16,7 +16,7 @@ const create = async newBlog =>  {
   const config = {
     headers: { Authorization: token }
   }
-  console.log("blog creating")
+  console.log('blog creating')
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
@@ -26,12 +26,12 @@ const update = async updatedBlog => {
     headers: { Authorization: token }
   }
 
-  const {id, ...payload} = updatedBlog
+  const { id, ...payload } = updatedBlog
 
   //console.log("id",id)
   //console.log("payload", payload)
 
-  const updateUrl = baseUrl + "/" + id
+  const updateUrl = baseUrl + '/' + id
   const response = await axios.put(updateUrl, payload, config)
   return response.data
 }
@@ -41,9 +41,9 @@ const deletee = async deletedBlogId => {
     headers: { Authorization: token }
   }
 
-  const deleteUrl = baseUrl + "/" + deletedBlogId
+  const deleteUrl = baseUrl + '/' + deletedBlogId
   const response = await axios.delete(deleteUrl, config)
   return response.data
 }
 
-export default { getAll, create, update, deletee, setToken}
+export default { getAll, create, update, deletee, setToken }

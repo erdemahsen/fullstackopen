@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUser}) => {
+const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -21,7 +21,7 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUser}) => {
     }
     handleUpdateBlog(likedPost)
   }
-  
+
   const deleteBlog = () => {
     if(window.confirm(`You are deleting ${blog.title} post. Are you sure ? `)){
       handleDeleteBlog(blog.id)
@@ -36,19 +36,19 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUser}) => {
         <button onClick={toggleView}>{view ? <>hide</> : <>view</> }</button>
       </div>
 
-      {view && 
+      {view &&
         <>
           <div>{blog.url}</div>
           <div>
-            likes: {blog.likes} 
+            likes: {blog.likes}
             <button onClick={likeBlog}>Like</button>
           </div>
           <div>{blog.user && blog.user.name}</div>
           {currentUser.username === blog.user.username && <button onClick={deleteBlog}>remove</button>}
         </>
       }
-       
-    </div>  
+
+    </div>
   )
 }
 

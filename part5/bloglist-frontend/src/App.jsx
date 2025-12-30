@@ -45,12 +45,12 @@ const App = () => {
       window.localStorage.removeItem('userJson')
       //setUsername('')
       //setPassword('')
-      setNotificationMessage({ message: "Logged out successfuly", isError: false })
+      setNotificationMessage({ message: 'Logged out successfuly', isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
     } catch {
-      setNotificationMessage({ message: "Could not log out", isError: true })
+      setNotificationMessage({ message: 'Could not log out', isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -59,14 +59,14 @@ const App = () => {
 
   const addBlog = async ({ title, author, url }) => {
     try {
-      const blog = await blogService.create({ title, author, url });
+      const blog = await blogService.create({ title, author, url })
       setNotificationMessage({ message: `New blog ${blog.title} by ${blog.author} is added`, isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
       await initializeBlogs()
     } catch {
-      setNotificationMessage({ message: "could not create the blog", isError: true })
+      setNotificationMessage({ message: 'could not create the blog', isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -75,15 +75,15 @@ const App = () => {
 
   const updateBlog = async (blogC) => {
     try {
-      const blog = await blogService.update(blogC);
-      setNotificationMessage({ message: `blog is updated`, isError: false })
+      await blogService.update(blogC)
+      setNotificationMessage({ message: 'blog is updated', isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
       await initializeBlogs()
     } catch (error) {
-      console.log("error", error)
-      setNotificationMessage({ message: "could not update the blog", isError: true })
+      console.log('error', error)
+      setNotificationMessage({ message: 'could not update the blog', isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -92,15 +92,15 @@ const App = () => {
 
   const deleteBlog = async (blogid) => {
     try {
-      await blogService.deletee(blogid);
-      setNotificationMessage({ message: `blog is deleted`, isError: false })
+      await blogService.deletee(blogid)
+      setNotificationMessage({ message: 'blog is deleted', isError: false })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
       await initializeBlogs()
     } catch (error) {
-      console.log("error", error)
-      setNotificationMessage({ message: "could not delete the blog", isError: true })
+      console.log('error', error)
+      setNotificationMessage({ message: 'could not delete the blog', isError: true })
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -139,7 +139,7 @@ const App = () => {
 
   const initializeBlogs = async () => {
     const blogs = await blogService.getAll()
-    
+
     setBlogs(blogs.sort((a, b) => b.likes - a.likes)) // easy sorting method
   }
   useEffect(() => {
@@ -152,14 +152,13 @@ const App = () => {
       // Token(user.token)
     }
     initializeBlogs()
-    console.log(user)
   }, [])
 
   useEffect(() => {
-    
+
   }, [])
 
-  
+
 
   return (
     <div>
