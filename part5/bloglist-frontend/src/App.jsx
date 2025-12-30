@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +15,10 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  const [notificationMessage, setNotificationMessage] = useState(null)
+
+
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -22,11 +28,16 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
+      setNotificationMessage({message: `${user.name} logged in succesfully`, isError: false})
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
       window.localStorage.setItem('userJson', JSON.stringify(user))
     } catch {
-      setErrorMessage('wrong credentials')
+      setNotificationMessage({message: 'wrong username or password', isError: true})
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotificationMessage(null)
       }, 5000)
     }
   }
@@ -38,23 +49,35 @@ const App = () => {
       window.localStorage.removeItem('userJson')
       //setUsername('')
       //setPassword('')
-    } catch {
-      setErrorMessage('could not logout')
+      setNotificationMessage({message: "Logged out successfuly", isError: false})
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotificationMessage(null)
+      }, 5000)
+    } catch {
+      setNotificationMessage({message: "Could not log out", isError: true})
+      setTimeout(() => {
+        setNotificationMessage(null)
       }, 5000)
     }
   }
 
-  const handleAddBlog = (event) => {
+  const handleAddBlog = async (event) => {
     event.preventDefault() // not necessary I feel like
     try {
       console.log("hi, adding", title, author, url)
-      const blog = blogService.create({ title, author, url}); 
-    } catch {
-      setErrorMessage('could not add a blog')
+      const blog = await blogService.create({ title, author, url}); 
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+
+      setNotificationMessage({message: `New blog ${blog.title} by ${blog.author} is added`, isError: false})
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotificationMessage(null)
+      }, 5000)
+    } catch {
+      setNotificationMessage({message: "could not create the blog", isError: true})
+      setTimeout(() => {
+        setNotificationMessage(null)
       }, 5000)
     }
   }
@@ -159,6 +182,7 @@ const App = () => {
 
   return (
     <div>
+      {notificationMessage && <Notification notificationMessage={notificationMessage}/>}
       {!user && loginForm()}
       {user && blogsListed()}
       {user && addBlog()}
