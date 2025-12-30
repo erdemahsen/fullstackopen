@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 
 const App = () => {
@@ -185,7 +186,9 @@ const App = () => {
       {notificationMessage && <Notification notificationMessage={notificationMessage}/>}
       {!user && loginForm()}
       {user && blogsListed()}
-      {user && addBlog()}
+      {user && <Togglable buttonLabel="Create new blog "> {addBlog()} </Togglable>}
+      
+      
     </div>
   )
 }
