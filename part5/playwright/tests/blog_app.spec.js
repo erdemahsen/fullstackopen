@@ -94,7 +94,7 @@ describe('Blog app', () => {
                 
             })
 
-            test('a new blog can be created', async ({ page }) => {
+            test('a new blog can be liked', async ({ page }) => {
                 await page.getByRole('button', { name: 'view' }).click()
                 await expect(page.getByText("likes: 0")).toBeVisible()
                 await page.getByRole('button', { name: 'like' }).click()
