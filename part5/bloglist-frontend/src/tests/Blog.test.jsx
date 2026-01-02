@@ -21,7 +21,7 @@ const user = {
   name: 'Tester Guy',
 }
 
-const updateBlogMock = vi.fn()
+const updateBlogMock = vi.fn() // I will use this guy
 const deleteBlogMock = vi.fn()
 
 beforeEach(() => {
@@ -52,4 +52,18 @@ test('view button is clicked', async () => {
   expect(component.container).toHaveTextContent(blog.url)
   expect(component.container).toHaveTextContent(blog.likes)
 })
+
+test('like button is clicked twice', async () => {
+
+  const userGuy = userEvent.setup()
+  const button = screen.getByText('view')
+  await userGuy.click(button)
+
+  const likeButton = screen.getByText('Like')
+  await userGuy.click(likeButton)
+  await userGuy.click(likeButton)
+
+  expect(updateBlogMock.mock.calls).toHaveLength(2)
+})
+
 
