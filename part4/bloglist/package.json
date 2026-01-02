@@ -7,7 +7,8 @@
     "dev": "NODE_ENV=development node --watch index.js",
     "test": "NODE_ENV=test node --test",
     "testblogapi": "NODE_ENV=test node --test -- tests/blog_api_test.js",
-    "testuserapi": "NODE_ENV=test node --test -- tests/users_api_test.js"
+    "testuserapi": "NODE_ENV=test node --test -- tests/users_api_test.js",
+    "start:test": "cross-env NODE_ENV=test node --watch index.js"
   },
   "author": "",
   "license": "ISC",
