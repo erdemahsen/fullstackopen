@@ -18,6 +18,7 @@ const user = {
 }
 
 
+
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
 
@@ -99,6 +100,22 @@ describe('Blog app', () => {
                 await page.getByRole('button', { name: 'like' }).click()
                 await expect(page.getByText("likes: 1")).toBeVisible()
             })
+            
+            test('created blog can be deleted', async ({ page }) => {
+                await page.getByRole('button', { name: 'view' }).click()
+                //await expect(page.getByText("likes: 0")).toBeVisible()
+
+                page.on('dialog', dialog => dialog.accept());
+
+
+                await page.getByRole('button', { name: 'remove' }).click()
+
+                await page.reload();
+
+                await expect(page.getByText('Blog E2E')).not.toBeVisible()
+                //await expect(page.getByText("likes: 1")).toBeVisible()
+            })
+            
         })
     })
 
