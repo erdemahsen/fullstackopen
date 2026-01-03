@@ -1,36 +1,25 @@
 import { useSelector, useDispatch } from 'react-redux'
-
-
+import {addAnecdote, voteAnecdote} from './reducers/anecdoteReducer'
 
 const App = () => {
   const anecdotes = useSelector(state => state)
   const dispatch = useDispatch()
 
   const vote = id => {
-    // console.log('vote', id)
-    dispatch({
-      type: 'VOTE',
-      payload: { id }
-    })
+    dispatch(voteAnecdote(id))
   }
 
-  const addAnectode = (event) => {
+  const add = (event) => {
     event.preventDefault()
-    const anectode = event.target.anectode.value // this is basically anectode text
-    // console.log(anectode)
-    dispatch({
-      type: 'ADD_ANECTODE',
-      payload: {
-        anectode // cool naming trick used, I like this trick
-      }
-    })
+    const anecdote = event.target.anecdote.value // this is basically anectode text
+    dispatch(addAnecdote(anecdote))
   };
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      <form onSubmit={addAnectode}>
-        <input name="anectode" /> 
+      <form onSubmit={add}>
+        <input name="anecdote" /> 
         <button type="submit">add</button>
       </form>
       {anecdotes.map(anecdote => (

@@ -19,7 +19,7 @@ const asObject = anecdote => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
   // console.log('state now: ', state)
   // console.log('action', action)
 
@@ -27,19 +27,35 @@ const reducer = (state = initialState, action) => {
     case 'VOTE':
       const id = action.payload.id
       const anecdoteToVote = state.find(a => a.id === id)
-      const votedAnectode = {
+      const votedAnecdote = {
         ...anecdoteToVote,
         votes: anecdoteToVote.votes + 1
       }
-      return state.map(anectode => (anectode.id !== id) ? anectode : votedAnectode).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
-    case 'ADD_ANECTODE':
-      const anectodeObj = asObject(action.payload.anectode)
+      return state.map(anectode => (anectode.id !== id) ? anectode : votedAnecdote).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
+    case 'ADD_ANECDOTE':
+      const anecdoteObj = asObject(action.payload.anectode)
       // console.log("obj",anectodeObj)
-      return [...state, anectodeObj]
+      return [...state, anecdoteObj]
     default:
       return state
   }
-
 }
 
-export default reducer
+export const addAnecdote = anecdote => {
+  return {
+      type: 'ADD_ANECDOTE',
+      payload: {
+        anecdote // cool naming trick used, I like this trick
+      }
+    }
+}
+
+export const voteAnecdote = id => {
+  return {
+    type: 'VOTE',
+    payload: {
+      id
+    }
+  }
+}
+
