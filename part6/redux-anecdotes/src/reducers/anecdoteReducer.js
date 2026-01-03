@@ -32,6 +32,10 @@ const reducer = (state = initialState, action) => {
         votes: anecdoteToVote.votes + 1
       }
       return state.map(anectode => (anectode.id !== id) ? anectode : votedAnectode)
+    case 'ADD_ANECTODE':
+      const anectodeObj = asObject(action.payload.anectode)
+      // console.log("obj",anectodeObj)
+      return [...state, anectodeObj]
     default:
       return state
   }

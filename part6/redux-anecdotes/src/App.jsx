@@ -7,17 +7,32 @@ const App = () => {
   const dispatch = useDispatch()
 
   const vote = id => {
-    console.log('vote', id)
+    // console.log('vote', id)
     dispatch({
       type: 'VOTE',
       payload: { id }
     })
-    
   }
+
+  const addAnectode = (event) => {
+    event.preventDefault()
+    const anectode = event.target.anectode.value // this is basically anectode text
+    // console.log(anectode)
+    dispatch({
+      type: 'ADD_ANECTODE',
+      payload: {
+        anectode // cool naming trick used, I like this trick
+      }
+    })
+  };
 
   return (
     <div>
       <h2>Anecdotes</h2>
+      <form onSubmit={addAnectode}>
+        <input name="anectode" /> 
+        <button type="submit">add</button>
+      </form>
       {anecdotes.map(anecdote => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
