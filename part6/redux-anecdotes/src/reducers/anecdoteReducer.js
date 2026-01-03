@@ -1,3 +1,5 @@
+import { act } from "react"
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -31,9 +33,10 @@ export const reducer = (state = initialState, action) => {
         ...anecdoteToVote,
         votes: anecdoteToVote.votes + 1
       }
-      return state.map(anectode => (anectode.id !== id) ? anectode : votedAnecdote).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
+      return state.map(anecdote => (anecdote.id !== id) ? anecdote : votedAnecdote).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
     case 'ADD_ANECDOTE':
-      const anecdoteObj = asObject(action.payload.anectode)
+      console.log("hi2", action.payload.anecdote)
+      const anecdoteObj = asObject(action.payload.anecdote)
       // console.log("obj",anectodeObj)
       return [...state, anecdoteObj]
     default:
@@ -42,6 +45,7 @@ export const reducer = (state = initialState, action) => {
 }
 
 export const addAnecdote = anecdote => {
+  console.log("hi", anecdote)
   return {
       type: 'ADD_ANECDOTE',
       payload: {
