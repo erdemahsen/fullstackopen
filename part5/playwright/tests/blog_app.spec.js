@@ -11,6 +11,12 @@ const blog = {
   //}
 }
 
+const blog2 = {
+  title: 'blog 2 is here',
+  author: 'Erdem',
+  url: 'blog2.com'
+}
+
 const user = {
   username: 'mluukkai',
   name: 'Matti Luukkainen',
@@ -131,10 +137,10 @@ describe('Blog app', () => {
 
             describe('After creating the blog', () => {
               beforeEach(async ({ page }) => {
-                //await page.getByRole('button', { name: 'view' }).click()
-                //await expect(page.getByText("likes: 0")).toBeVisible()
-                //await page.getByRole('button', { name: 'like' }).click()
-                //await expect(page.getByText("likes: 1")).toBeVisible()
+                await page.getByRole('button', { name: 'view' }).click()
+                await expect(page.getByText("likes: 0")).toBeVisible()
+                await page.getByRole('button', { name: 'like' }).click()
+                await expect(page.getByText("likes: 1")).toBeVisible()
                 // like the post created before logging out
                 await page.getByRole('button', { name: 'logout' }).click()
 
@@ -149,6 +155,36 @@ describe('Blog app', () => {
 
                 //await page.getByRole('button', { name: 'remove' }).not.toBeVisible()
                 await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+              })
+
+              test('most liked post should be first ', async ({ page }) => {
+
+                await page.getByRole('button', { name: 'Create new blog' }).click()
+                await page.getByLabel('title').fill(blog2.title)
+                await page.getByLabel('author').fill(blog2.author)
+                await page.getByLabel('url').fill(blog2.url)
+                await page.getByRole('button', { name: 'addBlog' }).click()
+                // checking the notification
+                await expect(page.getByText(`New blog ${blog2.title} by ${blog2.author} is added`)).toBeVisible()
+
+                await expect(page.getByText(`${blog2.title} - ${blog2.author}`)).toBeVisible()
+                
+                
+                const viewButtons = await page.getByRole('button', { name: 'view' }).all();
+                await viewButtons[1].click() // lol if we click 0th button first it changes location of the other buttons so it fails to click it xD
+                await viewButtons[0].click()
+
+                const like = await expect(page.getByText("likes: 1")).toBeVisible()
+
+                const firstBlog = page.getByText(blog.title + " - " + blog.author);
+                const secondBlog = page.getByText(blog2.title + " - " + blog2.author);
+
+                const isOrderedCorrectly = await page.evaluate(([el1, el2]) => {
+                  // Returns true if el1 is positioned before el2
+                  return !!(el1.compareDocumentPosition(el2) & Node.DOCUMENT_POSITION_FOLLOWING);
+                }, await Promise.all([firstBlog.elementHandle(), secondBlog.elementHandle()]));
+
+                expect(isOrderedCorrectly).toBe(true);
               })
             })
             
