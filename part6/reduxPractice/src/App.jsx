@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import NoteForm from './components/NoteForm'
+import Notes from './components/Notes'
 
-function App() {
-
+const App = () => {
   return (
-    <>
-      Hi
-    </>
+    <div>
+      <NoteForm />
+      <Notes />
+    </div>
   )
 }
 
