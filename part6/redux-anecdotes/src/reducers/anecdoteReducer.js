@@ -21,45 +21,32 @@ const asObject = anecdote => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-export const anecdoteReducer = (state = initialState, action) => {
-  // console.log('state now: ', state)
-  // console.log('action', action)
+// Slice is here using toolkit
+import { createSlice, current } from '@reduxjs/toolkit'
 
-  switch (action.type) {
-    case 'VOTE':
-      const id = action.payload.id
-      const anecdoteToVote = state.find(a => a.id === id)
-      const votedAnecdote = {
-        ...anecdoteToVote,
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    addAnecdote(state, action) {
+      const content = action.payload
+      state.push(asObject(content))
+    },
+    voteAnecdote(state, action) {
+      const id = action.payload
+      const anecdoteToVote = state.find(n => n.id === id)
+      // console.log(current(anecdoteToVote))
+      const anecdoteVoted = { 
+        ...anecdoteToVote, 
         votes: anecdoteToVote.votes + 1
       }
-      return state.map(anecdote => (anecdote.id !== id) ? anecdote : votedAnecdote).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
-    case 'ADD_ANECDOTE':
-      // console.log("hi2", action.payload.anecdote)
-      const anecdoteObj = asObject(action.payload.anecdote)
-      // console.log("obj",anectodeObj)
-      return [...state, anecdoteObj]
-    default:
-      return state
-  }
-}
-
-export const addAnecdote = anecdote => {
-  // console.log("hi", anecdote)
-  return {
-      type: 'ADD_ANECDOTE',
-      payload: {
-        anecdote // cool naming trick used, I like this trick
-      }
+      return state.map(anecdote =>
+        anecdote.id !== id ? anecdote : anecdoteVoted 
+      ).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
     }
-}
+  },
+})
 
-export const voteAnecdote = id => {
-  return {
-    type: 'VOTE',
-    payload: {
-      id
-    }
-  }
-}
 
+export const { addAnecdote, voteAnecdote } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
