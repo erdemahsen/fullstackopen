@@ -7,8 +7,8 @@ const AnecdoteForm = () => {
     const add = (event) => {
         event.preventDefault()
         const anecdote = event.target.anecdote.value // this is basically anectode text
-        //console.log("an", anecdote)
         dispatch(addAnecdote(anecdote))
+        event.target.anecdote.value = ''
     };
     return (
         <>

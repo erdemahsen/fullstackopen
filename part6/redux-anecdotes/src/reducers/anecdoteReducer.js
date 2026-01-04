@@ -35,7 +35,7 @@ export const anecdoteReducer = (state = initialState, action) => {
       }
       return state.map(anecdote => (anecdote.id !== id) ? anecdote : votedAnecdote).sort((a, b) => b.votes - a.votes) // I love this trick to sort :)
     case 'ADD_ANECDOTE':
-      console.log("hi2", action.payload.anecdote)
+      // console.log("hi2", action.payload.anecdote)
       const anecdoteObj = asObject(action.payload.anecdote)
       // console.log("obj",anectodeObj)
       return [...state, anecdoteObj]
@@ -45,7 +45,7 @@ export const anecdoteReducer = (state = initialState, action) => {
 }
 
 export const addAnecdote = anecdote => {
-  console.log("hi", anecdote)
+  // console.log("hi", anecdote)
   return {
       type: 'ADD_ANECDOTE',
       payload: {
