@@ -5,8 +5,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { getAnecdotes, createAnecdote, updateAnecdote } from './requests'
 
+import NotificationContext from "./NotificationContext"
+
+import { useContext } from 'react'
+
 const App = () => {
   const queryClient = useQueryClient()
+
+  const { notificationDispatch } = useContext(NotificationContext)
 
   const result = useQuery(
     {
@@ -42,12 +48,28 @@ const App = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
+
+    const notificationText = `New anecdote with content "${content}" is added`
+    notificationDispatch({ type: "SET_NOTIF", payload: notificationText })
+
+    setTimeout(() => {
+      notificationDispatch({ type: "REMOVE_NOTIF" })
+    }, 5000) // Clears after 5000 milliseconds (5 seconds)
+
+
   }
   
   const handleVote = (anecdote) => {
     console.log(anecdote.id)
     console.log('vote')
     updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes+1})
+
+    const notificationText = `Anecdote with content "${anecdote.content}" is voted`
+    notificationDispatch({ type: "SET_NOTIF", payload: notificationText })
+
+    setTimeout(() => {
+      notificationDispatch({ type: "REMOVE_NOTIF" })
+    }, 5000) // Clears after 5000 milliseconds (5 seconds)
   }
 
   console.log(JSON.parse(JSON.stringify(result)))
