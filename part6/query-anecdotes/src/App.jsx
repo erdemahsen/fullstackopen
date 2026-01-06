@@ -35,6 +35,10 @@ const App = () => {
   if (result.isLoading) {
     return <div>loading data...</div>
   }
+
+  else if (result.isError){ // cool I can access that isError
+    return <div>anecdote service not available due to problems in server</div>
+  }
  
   const anecdotes = result.data
 
