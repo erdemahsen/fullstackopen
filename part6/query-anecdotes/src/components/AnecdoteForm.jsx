@@ -1,10 +1,4 @@
-const AnecdoteForm = () => {
-  const onCreate = (event) => {
-    event.preventDefault()
-    const content = event.target.anecdote.value
-    event.target.anecdote.value = ''
-    console.log('new anecdote')
-  }
+const AnecdoteForm = ({onCreate}) => {
 
   return (
     <div>
