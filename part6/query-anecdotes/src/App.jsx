@@ -6,16 +6,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAnecdotes, createAnecdote, updateAnecdote } from './requests'
 
 const App = () => {
-  const handleVote = (anecdote) => {
-    console.log('vote')
-  }
   const queryClient = useQueryClient()
 
   const result = useQuery(
     {
       queryKey: ['anecdotes'],
       queryFn: getAnecdotes,
-      retry: false
+      retry: false,
+      refetchOnWindowFocus: false // it refetches auto when switching tabs if this is not here
     }
   )
 
@@ -24,6 +22,12 @@ const App = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] }) // cool
     },
+    //onSuccess: (newNote) => {
+    //  const notes = queryClient.getQueryData(['notes'])
+    //  queryClient.setQueryData(['notes'], notes.concat(newNote))
+    //}
+    // this is much better instead of sending a request to backend
+
   })
 
   const updateAnecdoteMutation = useMutation({
@@ -38,6 +42,12 @@ const App = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
+  }
+  
+  const handleVote = (anecdote) => {
+    console.log(anecdote.id)
+    console.log('vote')
+    updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes+1})
   }
 
   console.log(JSON.parse(JSON.stringify(result)))
