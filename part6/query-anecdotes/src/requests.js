@@ -17,9 +17,22 @@ export const createAnecdote = async (newAnecdote) => {
 
   const response = await fetch(baseUrl, options)
 
+  const data = await response.json() 
+
+  // 2. Check if the request failed (status 400/500)
   if (!response.ok) {
-    throw new Error('Failed to create note')
+    // 3. Create a custom error to throw
+    const error = new Error('Failed to create')
+    
+    // 4. Attach the backend data to this error object
+    // We structure it like Axios (error.response.data) so your App.jsx code works!
+    error.response = { data: data } 
+    
+    // 5. Throw it so React Query triggers 'onError'
+    throw error
   }
+
+  return data
 
   return await response.json()
 }

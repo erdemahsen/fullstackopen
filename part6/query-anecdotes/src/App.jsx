@@ -14,6 +14,14 @@ const App = () => {
 
   const { notificationDispatch } = useContext(NotificationContext)
 
+  const setNotification = (notificationText) => {
+    notificationDispatch({ type: "SET_NOTIF", payload: notificationText })
+      
+    setTimeout(() => {
+      notificationDispatch({ type: "REMOVE_NOTIF" })
+    }, 5000)
+  }
+
   const result = useQuery(
     {
       queryKey: ['anecdotes'],
@@ -27,7 +35,13 @@ const App = () => {
     mutationFn: createAnecdote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] }) // cool
+      setNotification("Successfully created new anecdote")
     },
+    onError: (error) => {
+        const errorMsg = error.response.data.error
+        //console.log(errorMsg)
+        setNotification(errorMsg)
+      }
     //onSuccess: (newNote) => {
     //  const notes = queryClient.getQueryData(['notes'])
     //  queryClient.setQueryData(['notes'], notes.concat(newNote))
@@ -40,7 +54,9 @@ const App = () => {
     mutationFn: updateAnecdote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+      setNotification("Successfully voted anecdote")
     }
+    
   })
   
   const addAnecdote = async (event) => {
@@ -48,28 +64,12 @@ const App = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
-
-    const notificationText = `New anecdote with content "${content}" is added`
-    notificationDispatch({ type: "SET_NOTIF", payload: notificationText })
-
-    setTimeout(() => {
-      notificationDispatch({ type: "REMOVE_NOTIF" })
-    }, 5000) // Clears after 5000 milliseconds (5 seconds)
-
-
   }
   
   const handleVote = (anecdote) => {
     console.log(anecdote.id)
     console.log('vote')
     updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes+1})
-
-    const notificationText = `Anecdote with content "${anecdote.content}" is voted`
-    notificationDispatch({ type: "SET_NOTIF", payload: notificationText })
-
-    setTimeout(() => {
-      notificationDispatch({ type: "REMOVE_NOTIF" })
-    }, 5000) // Clears after 5000 milliseconds (5 seconds)
   }
 
   console.log(JSON.parse(JSON.stringify(result)))
